@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+
+  <schema id="org.gnome.shell.extensions.pomodoro-obsidian"
+          path="/org/gnome/shell/extensions/pomodoro-obsidian/">
+
+    <!-- Obsidian vault -->
+    <key name="vault-root" type="s">
+      <default>'/home/omary/Documents/Vaults'</default>
+      <summary>Root folder holding the personal and work vaults</summary>
+    </key>
+
+
+    <!-- Timer durations, in minutes -->
+    <key name="work-minutes" type="i">
+      <default>25</default>
+      <range min="1" max="180"/>
+      <summary>Length of a work pomodoro</summary>
+    </key>
+    <key name="short-break-minutes" type="i">
+      <default>5</default>
+      <range min="1" max="60"/>
+      <summary>Length of a short break</summary>
+    </key>
+    <key name="long-break-minutes" type="i">
+      <default>15</default>
+      <range min="1" max="120"/>
+      <summary>Length of a long break</summary>
+    </key>
+    <key name="pomodoros-per-set" type="i">
+      <default>4</default>
+      <range min="1" max="12"/>
+      <summary>Work pomodoros before a long break</summary>
+    </key>
+
+    <!-- Behaviour -->
+    <key name="auto-start-breaks" type="b">
+      <default>true</default>
+      <summary>Start breaks without waiting for a click</summary>
+    </key>
+    <key name="auto-start-work" type="b">
+      <default>false</default>
+      <summary>Start the next pomodoro without waiting for a click</summary>
+    </key>
+    <key name="notify" type="b">
+      <default>true</default>
+      <summary>Show a desktop notification when a phase ends</summary>
+    </key>
+
+    <!-- What is being worked on. Each field writes only its own vault, so a
+         phase with both filled logs into both daily notes. -->
+    <key name="work-tasks" type="s">
+      <default>''</default>
+      <summary>Comma-separated Jira keys to log into the work vault</summary>
+    </key>
+    <key name="personal-tasks" type="s">
+      <default>''</default>
+      <summary>Comma-separated tags or plain text for the personal vault</summary>
+    </key>
+
+    <!-- Lofi stream -->
+    <key name="music-enabled" type="b">
+      <default>false</default>
+      <summary>Stream lofi while a pomodoro is running</summary>
+    </key>
+    <key name="music-url" type="s">
+      <default>'https://www.youtube.com/watch?v=1-LpQekNa9g'</default>
+      <summary>Stream URL handed to mpv</summary>
+    </key>
+    <key name="music-volume" type="i">
+      <default>40</default>
+      <range min="0" max="100"/>
+      <summary>mpv volume for the lofi stream</summary>
+    </key>
+
+  </schema>
+
+</schemalist>

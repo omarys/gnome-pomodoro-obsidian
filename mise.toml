@@ -1,0 +1,87 @@
+# Pomodoro Obsidian — dev, build and run entry points.
+#
+# Replaces the former Makefile: `mise tasks` lists them, `mise run <task>` runs
+# one. Only the language toolchain below is managed by mise; the system
+# packages it cannot provision are listed in the comment and checked by
+# `mise run deps`.
+#
+#   build: glib-compile-schemas, gnome-extensions
+#   test:  gjs
+#   run:   mpv, yt-dlp
+
+[tools]
+node = "26"
+pre-commit = "latest"
+
+[vars]
+uuid = "pomodoro-obsidian@omary.local"
+schema = "org.gnome.shell.extensions.pomodoro-obsidian"
+
+[tasks.schemas]
+description = "Compile the GSettings schema"
+run = "glib-compile-schemas schemas"
+
+[tasks."check:syntax"]
+description = "Syntax-check every JavaScript source file"
+run = '''
+for f in extension.js prefs.js lib/*.js; do
+  node --check "$f" || exit 1
+done
+'''
+
+[tasks.test]
+description = "Run the unit tests"
+run = "node --test tests/"
+
+[tasks.check]
+description = "Schema, syntax, vault writer and unit tests — no display needed"
+depends = ["schemas", "check:syntax", "test"]
+# GSETTINGS_BACKEND=memory keeps the vault-writer test out of the real dconf.
+run = "GSETTINGS_BACKEND=memory gjs -m tests/vault-check.js"
+
+[tasks."check-music"]
+description = "Drive a real mpv against the configured YouTube URL at volume 0"
+depends = ["schemas"]
+run = "gjs -m tests/music-live.js"
+
+[tasks.install]
+description = "Install the extension into the user extension directory"
+depends = ["check"]
+run = '''
+dest="$HOME/.local/share/gnome-shell/extensions/{{ vars.uuid }}"
+rm -rf "$dest"
+mkdir -p "$dest"
+cp -r metadata.json extension.js prefs.js stylesheet.css lib schemas "$dest"
+'''
+
+[tasks.uninstall]
+description = "Remove the installed extension"
+run = 'rm -rf "$HOME/.local/share/gnome-shell/extensions/{{ vars.uuid }}"'
+
+[tasks.pack]
+description = "Build a distributable extension zip"
+depends = ["check"]
+run = '''
+gnome-extensions pack --force \
+  --extra-source=lib --extra-source=schemas \
+  --schema=schemas/{{ vars.schema }}.gschema.xml
+'''
+
+[tasks.clean]
+description = "Remove build artifacts"
+run = 'rm -f schemas/gschemas.compiled "{{ vars.uuid }}.shell-extension.zip"'
+
+[tasks.deps]
+description = "Report any missing system dependencies"
+run = '''
+status=0
+for t in glib-compile-schemas gjs node gnome-extensions mpv yt-dlp; do
+  if command -v "$t" >/dev/null 2>&1; then
+    printf '  ok       %s\n' "$t"
+  else
+    printf '  MISSING  %s\n' "$t"
+    status=1
+  fi
+done
+exit $status
+'''

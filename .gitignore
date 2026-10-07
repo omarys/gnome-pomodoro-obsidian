@@ -1,0 +1,6 @@
+# Build artifacts — regenerate with `mise run schemas` / `mise run pack`.
+schemas/gschemas.compiled
+*.shell-extension.zip
+
+# Node
+node_modules/

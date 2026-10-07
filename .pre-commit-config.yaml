@@ -1,0 +1,39 @@
+# Git hooks for the extension. Install once with `pre-commit install`.
+#
+# The project checks are NOT duplicated here — they live in mise.toml and are
+# invoked through `mise run`, so `mise run check` and this hook can never drift
+# apart. Requires mise on PATH; it is already managing this repo's toolchain.
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-json
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: detect-private-key
+
+  - repo: local
+    hooks:
+      - id: mise-check
+        name: mise run check
+        description: Schema, syntax, vault writer and unit tests (no network, no display)
+        entry: mise run check
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      # Network-dependent and slow: never blocks a commit. Run explicitly with
+      # `pre-commit run --hook-stage manual check-music`.
+      - id: check-music
+        name: mise run check-music
+        description: Drive a real mpv against a YouTube URL at volume 0
+        entry: mise run check-music
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [manual]

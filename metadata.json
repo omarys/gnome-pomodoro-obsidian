@@ -1,0 +1,9 @@
+{
+  "uuid": "pomodoro-obsidian@omary.local",
+  "name": "Pomodoro Obsidian",
+  "description": "Pomodoro timer that logs focus time against Jira tickets and tags in Obsidian daily notes, and streams lofi from YouTube via mpv.",
+  "settings-schema": "org.gnome.shell.extensions.pomodoro-obsidian",
+  "shell-version": ["45", "46", "47", "48", "49", "50"],
+  "url": "https://github.com/omary/pomodoro-obsidian",
+  "version": 1
+}

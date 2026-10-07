@@ -1,0 +1,40 @@
+/* Only the shell's own CSS subset is available here, not GTK4 CSS:
+   no flexbox, no rem, a narrow set of properties. Keep it to font/spacing. */
+
+.pomodoro-panel-label {
+    font-feature-settings: "tnum";
+    padding: 0 4px;
+}
+
+.pomodoro-status-label {
+    font-weight: bold;
+    padding: 4px 0 2px 0;
+}
+
+.pomodoro-tasks-label {
+    color: #9a9996;
+    padding: 0 0 4px 0;
+}
+
+.pomodoro-tasks-row {
+    padding: 2px 0;
+}
+
+/* Fixed width so the two vault fields line up with each other. */
+.pomodoro-vault-label {
+    color: #9a9996;
+    min-width: 5em;
+    padding-right: 6px;
+}
+
+.pomodoro-task-entry {
+    width: 18em;
+}
+
+.pomodoro-phase-work {
+    color: #f66151;
+}
+
+.pomodoro-phase-break {
+    color: #33d17a;
+}

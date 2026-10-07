@@ -1,0 +1,10 @@
+{
+  "name": "pomodoro-obsidian",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "GNOME Shell pomodoro timer that logs focus time into Obsidian daily notes and streams lofi via mpv.",
+  "scripts": {
+    "test": "node --test tests/"
+  }
+}
