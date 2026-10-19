@@ -6,6 +6,11 @@
     padding: 0 4px;
 }
 
+/* A plain St.Button has no chrome; keep the toggle flush with the panel icons. */
+.pomodoro-lofi-toggle {
+    padding: 0 2px;
+}
+
 .pomodoro-status-label {
     font-weight: bold;
     padding: 4px 0 2px 0;

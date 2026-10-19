@@ -4,3 +4,6 @@ schemas/gschemas.compiled
 
 # Node
 node_modules/
+
+# openlore analysis artifacts
+.openlore/
