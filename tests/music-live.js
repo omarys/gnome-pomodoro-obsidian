@@ -118,6 +118,33 @@ check('an unreachable socket reuses the live mpv instead of spawning a second',
 music.stop();
 await sleep(300);
 
+/* ---------------------- reset() closes even a stray mpv ----------------- */
+// Regression: closing the stream only force-exited the mpv this instance
+// spawned, so an mpv orphaned by a shell crash kept its memory. reset() also
+// sends quit over the socket, which any mpv listening there obeys.
+
+const stray = Gio.Subprocess.new(
+    ['mpv', '--no-video', '--no-terminal', '--really-quiet', '--idle=yes',
+        `--input-ipc-server=${SOCKET_PATH}`],
+    Gio.SubprocessFlags.NONE);
+const strayPid = stray.get_identifier();
+
+let strayListening = false;
+for (let i = 0; i < 60 && !strayListening; i++) {
+    await sleep(250);
+    strayListening = GLib.file_test(SOCKET_PATH, GLib.FileTest.EXISTS);
+}
+check('an idle mpv binds the socket for the reset check', strayListening);
+
+music.reset();
+await sleep(800);
+check('reset() quits the stray mpv it never spawned',
+    !GLib.file_test(`/proc/${strayPid}`, GLib.FileTest.EXISTS));
+check('reset() removes the socket', !GLib.file_test(SOCKET_PATH, GLib.FileTest.EXISTS));
+
+if (GLib.file_test(`/proc/${strayPid}`, GLib.FileTest.EXISTS))
+    stray.force_exit();   // do not leak the player when the check fails
+
 print(`\n${failures} failure(s)`);
 if (failures > 0)
     throw new Error('music check failed');
